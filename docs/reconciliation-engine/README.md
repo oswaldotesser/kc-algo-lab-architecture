@@ -38,7 +38,7 @@ flowchart LR
 
 ### 1. Startup recovery
 
-The FastAPI lifespan initializes the database, performs a complete read-only exchange-state reconciliation, and then checks a bounded set of unresolved submissions (`order_submitted`, `submission_unknown`). This occurs before the private WebSocket is started. The startup candidate limit is configurable (default: 10 in the inspected source).
+The FastAPI lifespan initializes the database, performs a complete read-only exchange-state reconciliation, and then checks a bounded set of unresolved submissions (`order_submitted`, `submission_unknown`). This occurs before the private WebSocket is started. The startup recovery candidate limit is configurable, with a default value of 10.
 
 ### 2. WebSocket event handling
 
@@ -83,7 +83,7 @@ The implementation maintains a local lifecycle, including `order_submitted`, `su
 
 The reconciliation service docstring describes the operation as read-only, but the implementation calls `ensure_execution_based_protection()`, which can issue `set_trading_stop` when live execution is enabled. The accurate distinction is: order/position reads and local synchronization are read-only, while the bundled protection-maintenance step can amend attached TP/SL. The inspected implementation matches a position to a signal by **symbol and side**. This is adequate for the intended operating model but should be revisited before supporting multiple independent same-side positions for one symbol (for example, separate hedge/strategy ownership). The periodic reconciler uses a thread and a stop event; the source does not show a distributed lock or an explicit single-flight guard around all reconciliation entry points. Concurrent calls should therefore be considered in load/concurrency testing.
 
-The position snapshot is replaced from the REST result. The inspected read adapter requests up to 200 positions and filters zero-size entries; pagination behavior beyond that response is not implemented in the shown adapter. This is an operational boundary to document and test against the account/instrument scope.
+The position snapshot is replaced from the REST result. The Bybit REST adapter requests up to 200 positions per request and filters out zero-size entries; pagination behavior beyond that response is not implemented in the shown adapter. This is an operational boundary to document and test against the account/instrument scope.
 
 ## What is implemented vs. what is recommended
 
@@ -147,9 +147,9 @@ On Windows, activate the virtual environment using .venv\Scripts\activate in Com
 
 The tests validate the documented policy decisions in isolation. They do not execute the original service, call Bybit, or replace integration tests against the production adapters.
 
-## Source audit and provenance
+## Implementation notes
 
-This case study was prepared by inspecting the KC Algo Lab source archive, particularly the reconciliation service, private WebSocket listener, read-only Bybit adapter, SQLite persistence layer, FastAPI lifespan, order executor, and existing tests. The reference module is intentionally small and independently runnable. Production behavior should always be checked against the corresponding application source before future updates to this case study.
+This case study documents the reconciliation architecture implemented in KC Algo Lab. It covers the interaction between the reconciliation service, private WebSocket listener, Bybit REST adapter, SQLite persistence layer, FastAPI application lifecycle, and order execution workflow. The accompanying reference module and tests provide an isolated demonstration of selected reconciliation policies. The reference module is intentionally small and independently runnable. Production behavior should always be checked against the corresponding application source before future updates to this case study.
 
 ## Skills demonstrated
 
