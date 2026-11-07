@@ -2,9 +2,9 @@
 
 **Portfolio case study · Python · SQLite · REST API · WebSocket · Fault tolerance**
 
-A production-oriented case study of how a Python service keeps its local order/position journal aligned with an external exchange when events can be delayed, duplicated, missed, or interrupted by process/network failures.
+A production-oriented overview of how a Python service keeps its local order/position journal aligned with an external exchange when events can be delayed, duplicated, missed, or interrupted by process/network failures.
 
-> **Scope and safety:** This repository is a sanitized engineering case study, not a trading bot or a deployable exchange connector. It contains no API credentials, account identifiers, production configuration, strategy source, or live order-submission code. The `reference/` module is a small, dependency-free extraction of reconciliation policies for demonstration and testing; it is not imported by the original application.
+> **Scope and safety:** This repository is a sanitized engineering documentation, not a trading bot or a deployable exchange connector. It contains no API credentials, account identifiers, production configuration, strategy source, or live order-submission code. The `reference/` module is a small, dependency-free extraction of reconciliation policies for demonstration and testing; it is not imported by the original application.
 
 ## Problem
 
@@ -149,8 +149,8 @@ The tests validate the documented policy decisions in isolation. They do not exe
 
 ## Implementation notes
 
-This case study documents the reconciliation architecture implemented in KC Algo Lab. It covers the interaction between the reconciliation service, private WebSocket listener, Bybit REST adapter, SQLite persistence layer, FastAPI application lifecycle, and order execution workflow. The accompanying reference module and tests provide an isolated demonstration of selected reconciliation policies. The reference module is intentionally small and independently runnable. Production behavior should always be checked against the corresponding application source before future updates to this case study.
+This document describes the reconciliation architecture implemented in KC Algo Lab. It covers the interaction between the reconciliation service, private WebSocket listener, Bybit REST adapter, SQLite persistence layer, FastAPI application lifecycle, and order execution workflow. The accompanying reference module and tests provide an isolated demonstration of selected reconciliation policies. The reference module is intentionally small and independently runnable. Production behavior should always be checked against the corresponding application source before future updates to this documentation.
 
-## Skills demonstrated
+## Technical scope
 
 Python backend engineering · REST API integration · WebSocket event handling · SQLite persistence · distributed-state reconciliation · fault-tolerant workflows · idempotency boundaries · failure-mode analysis · automated testing
