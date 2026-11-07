@@ -9,7 +9,7 @@ The KC Algo Lab application includes tests covering several important parts of t
 - `tests/test_order_submission_journal.py`: submission acknowledgement, definite rejection, unknown outcome, and blocked execution update local status/slot accounting.
 - `tests/test_bybit_order_execution.py`: no API calls while safety locks are closed; acknowledgement; rejection; timeout after `place_order` is marked unknown and is not retried.
 
-The original application's test suite was executed on the production VPS environment, where the required dependencies, including `pybit`, are installed. The latest reported run completed with at least 31 passing tests.
+The KC Algo Lab application's test suite was executed in the production VPS environment, where the required dependencies, including `pybit`, are installed. The latest test run completed with at least 31 passing tests.
 
 The standalone package contains a separate set of isolated policy tests. All 7 standalone tests passed in the local validation run. These tests validate the extracted reconciliation policies independently and do not replace the original application's integration and component tests.
 
