@@ -1,8 +1,8 @@
 # Focused test plan
 
-## Existing tests found in the inspected source archive
+## Existing test coverage
 
-The archive already contains tests relevant to this case:
+The KC Algo Lab application includes tests covering several important parts of the reconciliation workflow:
 
 - `app/test_bybit_reconciliation.py`: filled order becomes open from REST state; rejected order releases a slot; missing order remains pending; periodic snapshot can close an open signal and queue a journal entry; periodic reconciler records success/error.
 - `tests/test_bybit_private_ws.py`: requests pybit automatic reconnect (`restart_on_error=True`, `retries=0`).
