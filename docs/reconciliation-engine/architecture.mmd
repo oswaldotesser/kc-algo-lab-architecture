@@ -1,0 +1,24 @@
+flowchart TB
+    subgraph Local[Local service]
+        DB[(SQLite journal\nsignals / events / positions)]
+        WS[Private WebSocket listener]
+        HANDLERS[Event handlers]
+        START[FastAPI startup recovery]
+        TIMER[Periodic reconciler]
+        WORKER[Post-submission retry worker]
+        RECON[Reconciliation service]
+    end
+
+    subgraph Exchange[Exchange]
+        STREAM[Private account streams]
+        REST[REST API\nopen orders / order history / positions / TP-SL]
+    end
+
+    STREAM --> WS --> HANDLERS --> DB
+    HANDLERS -->|position event triggers refresh| RECON
+    START --> RECON
+    TIMER --> RECON
+    WORKER --> RECON
+    RECON -->|read: orders / positions| REST
+    RECON -->|conditional write: TP/SL| REST
+    RECON <--> DB

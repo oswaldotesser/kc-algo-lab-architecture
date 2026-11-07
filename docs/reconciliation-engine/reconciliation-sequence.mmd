@@ -1,0 +1,48 @@
+sequenceDiagram
+    autonumber
+    participant App as FastAPI lifecycle
+    participant DB as SQLite
+    participant Reconciler
+    participant REST as Bybit REST
+    participant WS as Private WebSocket
+
+    App->>DB: Initialize schema
+    App->>Reconciler: Full startup reconciliation
+    Reconciler->>REST: Read open positions
+    REST-->>Reconciler: Current position snapshot
+    Reconciler->>DB: Replace local position snapshot / update signal states
+
+    App->>DB: Load bounded unresolved submissions
+    loop Each unresolved submission
+        App->>REST: Find order by orderLinkId
+        REST->>REST: Search open orders, then history
+        REST-->>App: Order or not found yet
+        App->>REST: Read current positions
+        REST-->>App: Position snapshot
+        App->>DB: Persist reconciliation result
+    end
+
+    App->>WS: Subscribe position/order/execution/wallet
+
+    Note over WS,DB: Incoming events are fingerprinted, persisted and processed by event handlers.
+    WS->>DB: Record event fingerprint
+    WS->>DB: Apply order/execution event by stable identifiers
+
+    WS->>Reconciler: Position notification triggers REST refresh
+    Reconciler->>REST: Read full open-position snapshot
+    REST-->>Reconciler: Current positions
+    Reconciler->>DB: Synchronize snapshot and lifecycle transitions
+    opt Live execution enabled and protection adjustment required
+        Reconciler->>REST: Update position TP/SL
+        REST-->>Reconciler: Protection update result
+    end
+
+    loop Configured periodic interval
+        Reconciler->>REST: Read open positions
+        REST-->>Reconciler: Current positions
+        Reconciler->>DB: Synchronize local state
+        opt Live execution enabled and protection adjustment required
+            Reconciler->>REST: Update position TP/SL
+            REST-->>Reconciler: Protection update result
+        end
+    end
