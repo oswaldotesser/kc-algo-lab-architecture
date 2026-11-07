@@ -5,7 +5,7 @@ KC Algo Lab is a private algorithmic trading infrastructure project focused on a
 
 The system connects TradingView alerts to a Python-based backend, processes incoming signals, manages execution parameters, and communicates with the Bybit exchange.
 
-The project demonstrates practical experience with backend development, REST APIs, WebSockets, Linux server administration, and automated system monitoring.
+The system combines Python backend services, REST API integrations, WebSocket event processing, Linux-based deployment, and automated monitoring.
 
 ## System Architecture
 
@@ -60,7 +60,7 @@ The infrastructure uses:
 
 ## Engineering Focus
 
-This project demonstrates practical implementation and operation of an integrated backend system:
+The project is built around the implementation and operation of an integrated backend system, combining:
 
 - Third-party API integration.
 - Webhook processing.
